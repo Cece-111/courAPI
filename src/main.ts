@@ -1,16 +1,25 @@
-import express from "express";
-import { initHandlers } from "./handlers/handlers";
+import express from "express"
+import { initHandlers } from "./handlers/handler"
+import { AppDataSource } from "./db/database"
 
-const app=()=> {
-    const app = express();
-    const port = 3200;
-    app.use(express.json());
-    initHandlers(app);
+const app = async () => {
+    const app = express()
+    const port = 3000
+    app.use(express.json())
+    initHandlers(app)
 
-    app.listen(port, ()=>{
-        console.log(`Server is running at http://localhost:${port}`);
+    try {
+        await AppDataSource.initialize()
+        //consolee le dirname
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message)
+        }
+    }
+
+    app.listen(port, () => {
+        console.log(`Server running on http://localhost:${port}`)
     })
-
 }
 
 app();
